@@ -6,7 +6,7 @@ const connectDB = require('./config/db');
 const cookieParser = require('cookie-parser'); 
 // Load environment variables from .env file
 dotenv.config();
-
+require('express-async-errors');
 // Connect to the database
 connectDB();
 
@@ -21,7 +21,10 @@ app.get('/', (req, res) => {
 });
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/api/v1/profile', require('./routes/profileRoutes'));
-
+app.use('/api/v1/users', require('./routes/userRoutes'));
+app.use('/api/v1/swaps', require('./routes/swapRoutes'));
+app.use('/api/v1/feedback', require('./routes/feedbackRoutes'));
+app.use('/api/v1/admin', require('./routes/adminRoutes'));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, console.log(`Server running on port ${PORT}`));
