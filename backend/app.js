@@ -4,6 +4,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cookieParser = require('cookie-parser'); 
+const cors = require('cors');
 // Load environment variables from .env file
 dotenv.config();
 require('express-async-errors');
@@ -13,6 +14,10 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(cors({
+  origin: 'http://localhost:5173', // frontend URL
+  credentials: true
+}));
 const authRouter = require('./routes/authRoutes')
 const profileRouter = require('./routes/profileRoutes');
 

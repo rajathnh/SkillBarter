@@ -5,11 +5,33 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password });
-    // Here you would typically call your authentication API
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Login successful!');
+        // You can redirect or store token here
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      setError('Network error');
+    }
+    setLoading(false);
   };
 
   return (
@@ -43,7 +65,6 @@ function LoginPage() {
               </svg>
             </span>
           </div>
-          
           <div className="input-group">
             <input
               type="password"
@@ -60,7 +81,9 @@ function LoginPage() {
               </svg>
             </span>
           </div>
-          
+          {error && (
+            <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{error}</div>
+          )}
           <div className="options-row">
             <label className="remember-me">
               <input 
@@ -73,14 +96,12 @@ function LoginPage() {
             </label>
             <a href="#" className="forgot-password">Forgot password?</a>
           </div>
-          
-          <button type="submit" className="login-button">
-            Sign In
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
-          
           <div className="signup-link">
             Don't have an account? <a href="#">Sign up</a>
           </div>
