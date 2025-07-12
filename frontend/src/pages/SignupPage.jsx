@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SignupPage.css'; // Using a dedicated CSS file
 
 function SignupPage() {
@@ -11,6 +12,7 @@ function SignupPage() {
   // State for loading and error messages
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,6 +21,10 @@ function SignupPage() {
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return; // Stop the submission
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
     }
 
     setLoading(true);
@@ -36,9 +42,10 @@ function SignupPage() {
       const data = await response.json();
       if (response.ok) {
         alert("Signup successful!");
-        // Optionally redirect to login or dashboard here
+        navigate('/'); // Redirect to home page
       } else {
-        setError(data.message || "Signup failed");
+        // Show backend error message, including 'Email already in use'
+        setError(data.message || data.msg || data.error || "Signup failed");
       }
     } catch (err) {
       setError("Network error");
