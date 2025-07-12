@@ -7,7 +7,7 @@ import NavbarLayout from './NavbarLayout';
 function NavbarPublic() {
   return (
     // Use the layout, linking the logo to the login page by default
-    <NavbarLayout logoLinkTo="/login">
+    <NavbarLayout logoLinkTo="/">
       {/* These are the links for a logged-out user */}
       <Link to="/login">Login</Link>
       <Link to="/signup" className="nav-button">Sign Up</Link>
