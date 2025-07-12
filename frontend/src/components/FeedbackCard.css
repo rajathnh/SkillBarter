@@ -1,0 +1,44 @@
+/* src/components/FeedbackCard.css */
+
+.feedback-card {
+  background-color: #34495e;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+  margin-bottom: 1rem;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.rater-name {
+  font-weight: 600;
+  color: #ecf0f1;
+}
+
+.feedback-date {
+  font-size: 0.8rem;
+  color: #95a5a6;
+}
+
+.star-rating {
+  color: #7f8c8d; /* Color for empty stars */
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 2px;
+}
+
+.star-filled {
+  color: #f1c40f; /* Yellow for filled stars */
+}
+
+.feedback-comment {
+  margin: 0;
+  color: #bdc3c7;
+  font-style: italic;
+  line-height: 1.4;
+}

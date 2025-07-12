@@ -1,6 +1,8 @@
+
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const Skill = require('../models/Skills');
+const Feedback = require('../models/Feedback'); // <-- ADD THIS LINE
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 
@@ -68,23 +70,39 @@ const getAllUsers = async (req, res) => {
 
 
 /**
- * @desc    Get a single public user profile
+ * @desc    Get a single public user profile WITH their feedback
  * @route   GET /api/v1/users/:id
  * @access  Public
  */
 const getSingleUser = async (req, res) => {
   const { id: userId } = req.params;
 
-  const profile = await Profile.findOne({ user: userId })
-    .populate({
-      path: 'user',
-      select: 'name createdAt isBanned',
-    })
-    .populate({
-      path: 'skillsOffered skillsWanted',
-      select: 'name',
-    });
+  // We can fetch the profile and feedback in parallel for better performance
+  // Promise.all runs both database queries at the same time.
+  const [profile, feedback] = await Promise.all([
+    
+    // First query: Find the user's profile
+    Profile.findOne({ user: userId })
+      .populate({
+        path: 'user',
+        select: 'name createdAt isBanned', // Select the user fields we want to show
+      })
+      .populate({
+        path: 'skillsOffered skillsWanted',
+        select: 'name', // Select just the name of the skills
+      }),
+    
+    // Second query: Find all feedback where this user was the one being rated
+    Feedback.find({ ratedUser: userId })
+      .populate({ 
+        path: 'rater', // For the 'rater' field in the feedback...
+        select: 'name' // ...populate their name so we can display "Review by John Doe"
+      })
+      .sort({ createdAt: -1 }) // Show newest feedback first
+  ]);
 
+
+  // If the profile query returned null, the user doesn't exist.
   if (!profile) {
     throw new CustomError.NotFoundError(`No user found with id: ${userId}`);
   }
@@ -94,10 +112,13 @@ const getSingleUser = async (req, res) => {
     throw new CustomError.NotFoundError(`No user found with id: ${userId}`);
   }
   if (!profile.isPublic) {
+    // Note: An admin could potentially override this, but for now, it's a hard rule.
     throw new CustomError.UnauthorizedError('This user profile is private');
   }
 
-  res.status(StatusCodes.OK).json({ profile });
+  // If everything is okay, send back a single JSON object containing both results.
+  // The 'feedback' variable will be an array (or an empty array if none is found).
+  res.status(StatusCodes.OK).json({ profile, feedback });
 };
 
 
