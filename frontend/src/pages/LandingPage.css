@@ -1,0 +1,208 @@
+/* src/pages/LandingPage.css */
+
+.landing-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: white;
+}
+
+.landing-page-title {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 2.8rem;
+  font-weight: 700;
+}
+
+.landing-page-subtitle {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  color: #bdc3c7;
+}
+
+.landing-signup-link {
+  color: #3498db;
+  font-weight: 600;
+  text-decoration: none;
+}
+.landing-signup-link:hover {
+  text-decoration: underline;
+}
+
+/* Search Form Styles */
+.landing-search-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.landing-search-input {
+  flex-grow: 1;
+  height: 50px;
+  padding: 0 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.landing-search-input:focus {
+  border-color: #3498db;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.landing-search-button {
+  height: 50px;
+  padding: 0 2rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Loading, Error, and Results States */
+.landing-loading-spinner, .landing-error-message, .landing-no-results {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+}
+.landing-error-message {
+  color: #ff4d4d;
+}
+
+/* Profiles Grid */
+.landing-profiles-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Standalone Card Styles */
+.landing-user-card {
+  background: rgba(40, 56, 71, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  cursor: default; /* Not clickable */
+}
+
+.landing-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.landing-profile-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3498db;
+}
+
+.landing-user-info {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.landing-user-name {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.landing-user-location {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.landing-user-rating-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.landing-star-rating {
+  color: #7f8c8d;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+.landing-star-rating .star-filled {
+  color: #f1c40f;
+}
+.landing-rating-text {
+  font-size: 0.8rem;
+  color: #bdc3c7;
+}
+
+.landing-skills-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  text-align: left;
+}
+
+.landing-skills-list h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.landing-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.landing-tag {
+  padding: 0.3rem 0.7rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+}
+.tag-offered { background: rgba(46, 204, 113, 0.2); color: #82e0aa; }
+.tag-wanted { background: rgba(52, 152, 219, 0.2); color: #a9cce3; }
+
+.landing-tag-empty {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Pagination Styles */
+.landing-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.landing-pagination button {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.landing-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
