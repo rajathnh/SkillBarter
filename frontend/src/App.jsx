@@ -10,7 +10,8 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import MyProfilePage from './pages/MyProfilePage'; // The new profile page
-
+import UserProfilePage from './pages/UserProfilePage';
+import MySwapsPage from './pages/MySwapsPage';
 // Global Styles
 import './App.css';
 
@@ -74,6 +75,23 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route 
+  path="/swaps"
+  element={
+    <ProtectedRoute user={user}>
+      <MySwapsPage />
+    </ProtectedRoute>
+  }
+/>
+            <Route 
+  path="/users/:userId"
+  element={
+    <ProtectedRoute user={user}>
+      <UserProfilePage />
+    </ProtectedRoute>
+  }
+/>
+
             
             {/* DEFAULT ROUTE */}
             {/* If logged in, redirect to dashboard. Otherwise, redirect to login. */}
