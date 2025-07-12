@@ -1,14 +1,17 @@
 // src/components/FeedbackCard.jsx
 
 import React from 'react';
-import './FeedbackCard.css'; // We'll create this CSS file next
+import './FeedbackCard.css';
 
 // A helper function to render star ratings visually
 const StarRating = ({ rating }) => {
   const stars = [];
   for (let i = 1; i <= 5; i++) {
     stars.push(
-      <span key={i} className={i <= rating ? 'star-filled' : 'star-empty'}>
+      // THE FIX: Removed the non-existent 'star-empty' class.
+      // Unfilled stars are now plain <span>s that correctly inherit their
+      // color from the parent '.star-rating' div, as intended by the CSS.
+      <span key={i} className={i <= rating ? 'star-filled' : ''}>
         ★
       </span>
     );

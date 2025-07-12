@@ -18,6 +18,11 @@ function NavbarPrivate({ user, onLogout }) {
     <NavbarLayout logoLinkTo="/dashboard">
       {/* These links are passed as `children` to the layout */}
       <span className="user-greeting">Hi, {user.name}!</span>
+      {user.role === 'ADMIN' && (
+        <Link to="/admin" style={{ color: '#f1c40f', fontWeight: 'bold' }}>
+          Admin Panel
+        </Link>
+      )}
       <Link to="/dashboard">Dashboard</Link>
       <Link to="/profile/me">My Profile</Link>
       <Link to="/swaps">My Swaps</Link>

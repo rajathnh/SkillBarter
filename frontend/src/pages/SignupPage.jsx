@@ -41,8 +41,10 @@ function SignupPage() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert("Signup successful!");
-        navigate('/'); // Redirect to home page
+        // --- START: MODIFIED BEHAVIOR ---
+        alert("Signup successful! Please complete your profile to get started.");
+        navigate('/profile/me'); // Redirect to profile editing page
+        // --- END: MODIFIED BEHAVIOR ---
       } else {
         // Show backend error message, including 'Email already in use'
         setError(data.message || data.msg || data.error || "Signup failed");

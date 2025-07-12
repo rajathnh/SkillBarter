@@ -1,11 +1,12 @@
 const Profile = require('../models/Profile');
 const Skill = require('../models/Skills');
-const User = require('../models/User');
+const User = require('../models/User'); // <-- IMPORT USER
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const { createTokenUser, attachCookiesToResponse } = require('../utils'); // <-- IMPORT UTILS
 
 /**
  * @desc    Get the profile of the currently logged-in user
@@ -16,6 +17,9 @@ const getMyProfile = async (req, res) => {
   const profile = await Profile.findOne({ user: req.user.userId }).populate({
     path: 'skillsOffered skillsWanted',
     select: 'name',
+  }).populate({ // Also populate the user details
+    path: 'user',
+    select: 'name email'
   });
 
   if (!profile) {
@@ -26,23 +30,33 @@ const getMyProfile = async (req, res) => {
 };
 
 /**
- * @desc    Update the profile of the currently logged-in user
+ * @desc    Update the profile of the currently logged-in user (now handles name and photo)
  * @route   PATCH /api/v1/profile/me
  * @access  Private
  */
 const updateMyProfile = async (req, res) => {
-  const { location, availability, isPublic } = req.body;
+  // Destructure name from body as well
+  const { location, availability, isPublic, name } = req.body;
+  const { userId } = req.user;
 
-  const profile = await Profile.findOne({ user: req.user.userId });
-
+  const profile = await Profile.findOne({ user: userId });
   if (!profile) {
     throw new CustomError.NotFoundError(`No profile found for this user`);
   }
+  
+  const userToUpdate = await User.findById(userId);
+  if (!userToUpdate) {
+      throw new CustomError.NotFoundError(`No user found for this profile`);
+  }
 
-  // Update text fields
-  profile.location = location || profile.location;
-  profile.availability = availability || profile.availability;
-  // Explicitly check for boolean to allow setting to `false`
+  // Update the user's name on the User model if provided
+  if (name) {
+    userToUpdate.name = name;
+  }
+
+  // Update profile text fields
+  profile.location = location !== undefined ? location : profile.location;
+  profile.availability = availability !== undefined ? availability : profile.availability;
   if (isPublic !== undefined) {
     profile.isPublic = isPublic;
   }
@@ -51,32 +65,36 @@ const updateMyProfile = async (req, res) => {
   if (req.files && req.files.profilePhoto) {
     const profileImage = req.files.profilePhoto;
 
-    // Basic validation for image type
     if (!profileImage.mimetype.startsWith('image')) {
       throw new CustomError.BadRequestError('Please upload an image file');
     }
 
-    // Basic validation for image size
-    const maxSize = 1024 * 1024 * 2; // 2MB
+    const maxSize = 1024 * 1024 * 5; // 5MB
     if (profileImage.size > maxSize) {
-      throw new CustomError.BadRequestError(
-        'Image is too large, please upload an image smaller than 2MB'
-      );
+      throw new CustomError.BadRequestError('Image is too large, please upload an image smaller than 5MB');
     }
 
     const result = await cloudinary.uploader.upload(profileImage.tempFilePath, {
       use_filename: true,
       folder: 'skill-swap-profiles',
+      resource_type: 'image'
     });
 
-    // Clean up the temporary file
     fs.unlinkSync(profileImage.tempFilePath);
     profile.profilePhotoUrl = result.secure_url;
   }
 
   await profile.save();
-  res.status(StatusCodes.OK).json({ profile });
+  await userToUpdate.save();
+
+  // Re-issue the token with the potentially new name
+  const tokenUser = createTokenUser(userToUpdate);
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  // Send back the updated user object for the frontend to use
+  res.status(StatusCodes.OK).json({ profile, user: tokenUser });
 };
+
 
 /**
  * @desc    Add a skill to the current user's profile

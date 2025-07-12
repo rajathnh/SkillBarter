@@ -2,25 +2,56 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './UserCard.css'; // We'll create this CSS file next
+import './UserCard.css';
 
-// This component takes a single 'profile' object as a prop
-function UserCard({ profile }) {
-  // A simple fallback for the profile photo if it doesn't exist
+// --- START: COPIED FROM FeedbackCard FOR REUSE ---
+const StarRating = ({ rating }) => {
+  const stars = [];
+  const fullRating = Math.round(rating);
+  for (let i = 1; i <= 5; i++) {
+    stars.push(
+      <span key={i} className={i <= fullRating ? 'star-filled' : ''}>
+        ★
+      </span>
+    );
+  }
+  return <div className="star-rating-display">{stars}</div>;
+};
+// --- END: COPIED HELPER ---
+
+function UserCard({ profile, onShowRequestModal }) {
   const profilePhoto = profile.profilePhotoUrl || 'https://i.imgur.com/6VBx3io.png';
 
+  const handleRequestClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onShowRequestModal(profile);
+  };
+
   return (
-    // The entire card is a link to the user's public profile page
     <Link to={`/users/${profile.user._id}`} className="user-card-link">
       <div className="user-card">
         <div className="card-header">
           <img src={profilePhoto} alt={`${profile.user.name}'s profile`} className="profile-photo" />
           <div className="user-info">
             <h3 className="user-name">{profile.user.name}</h3>
-            {/* You can add location or other details here if available */}
             <p className="user-location">{profile.location || 'Location not specified'}</p>
+             {/* --- START: ADDED RATING DISPLAY --- */}
+            <div className="user-rating">
+              {profile.ratingCount > 0 ? (
+                <>
+                  <StarRating rating={profile.averageRating} />
+                  <span className="rating-text">
+                    {profile.averageRating.toFixed(1)} ({profile.ratingCount} reviews)
+                  </span>
+                </>
+              ) : (
+                <span className="rating-text">No reviews yet</span>
+              )}
+            </div>
+            {/* --- END: ADDED RATING DISPLAY --- */}
           </div>
-          <button className="request-button">Request</button>
+          <button onClick={handleRequestClick} className="request-button">Request</button>
         </div>
         <div className="skills-section">
           <div className="skills-list skills-offered">

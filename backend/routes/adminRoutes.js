@@ -10,6 +10,7 @@ const {
   getAllUsersForAdmin,
   toggleBanUser,
   getAllSwapsForAdmin,
+  getAllSkillsForAdmin, // <-- IMPORT NEW CONTROLLER
   toggleSkillApproval,
 } = require('../controllers/adminController');
 
@@ -21,6 +22,9 @@ router.route('/users/:id/ban').patch(toggleBanUser);
 
 router.route('/swaps').get(getAllSwapsForAdmin);
 
+// --- START: ADDED SKILL MANAGEMENT ROUTES ---
+router.route('/skills').get(getAllSkillsForAdmin);
 router.route('/skills/:id/toggle-approval').patch(toggleSkillApproval);
+// --- END: ADDED SKILL MANAGEMENT ROUTES ---
 
 module.exports = router;

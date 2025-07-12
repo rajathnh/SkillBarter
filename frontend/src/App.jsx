@@ -6,21 +6,30 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Component & Page Imports
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoutes'; // <-- IMPORT ADMIN ROUTE
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
-import MyProfilePage from './pages/MyProfilePage'; // The new profile page
+import MyProfilePage from './pages/MyProfilePage';
 import UserProfilePage from './pages/UserProfilePage';
 import MySwapsPage from './pages/MySwapsPage';
+
+// --- START: IMPORT ADMIN PAGES ---
+import AdminLayout from './pages/Admin/AdminLayout';
+import AdminDashboardPage from './pages/Admin/AdminDashboardPage';
+import ManageUsersPage from './pages/Admin/ManageUsersPage';
+import ManageSkillsPage from './pages/Admin/ManageSkillsPage';
+import ManageSwapsPage from './pages/Admin/ManageSwapsPage';
+// --- END: IMPORT ADMIN PAGES ---
+
 // Global Styles
 import './App.css';
+import './pages/Admin/Admin.css'; // Import admin styles globally
 
 function App() {
-  // This is the single source of truth for the logged-in user
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // To prevent flashes of content
+  const [loading, setLoading] = useState(true);
 
-  // On initial load, check localStorage to see if the user was already logged in.
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem('skillSwapUser');
@@ -28,20 +37,17 @@ function App() {
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {
-      // If stored user is invalid, remove it
       console.error("Failed to parse stored user", error);
       localStorage.removeItem('skillSwapUser');
     }
-    setLoading(false); // Finished checking, we can now render the app
+    setLoading(false);
   }, []);
 
-  // Function to handle logout
   const handleLogout = () => {
     localStorage.removeItem('skillSwapUser');
     setUser(null);
   };
   
-  // Don't render anything until we have checked for a user
   if (loading) {
     return <div>Loading Application...</div>;
   }
@@ -49,56 +55,39 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Pass user object and the logout function to the Navbar */}
         <Navbar user={user} onLogout={handleLogout} />
         
-        <main style={{ paddingTop: '80px' }}> {/* Padding to avoid content hiding under fixed navbar */}
+        <main style={{ paddingTop: '80px' }}>
           <Routes>
             {/* PUBLIC ROUTES */}
             <Route path="/login" element={<LoginPage onLogin={setUser} />} />
             <Route path="/signup" element={<SignupPage />} />
 
             {/* PROTECTED ROUTES (Require login) */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute user={user}>
-                  <DashboardPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/profile/me"
-              element={
-                <ProtectedRoute user={user}>
-                  <MyProfilePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route 
-  path="/swaps"
-  element={
-    <ProtectedRoute user={user}>
-      <MySwapsPage />
-    </ProtectedRoute>
-  }
-/>
-            <Route 
-  path="/users/:userId"
-  element={
-    <ProtectedRoute user={user}>
-      <UserProfilePage />
-    </ProtectedRoute>
-  }
-/>
+            <Route path="/dashboard" element={<ProtectedRoute user={user}><DashboardPage /></ProtectedRoute>} />
+            <Route path="/profile/me" element={<ProtectedRoute user={user}><MyProfilePage /></ProtectedRoute>} />
+            <Route path="/swaps" element={<ProtectedRoute user={user}><MySwapsPage /></ProtectedRoute>} />
+            <Route path="/users/:userId" element={<ProtectedRoute user={user}><UserProfilePage /></ProtectedRoute>} />
 
+            {/* --- START: ADMIN ROUTES --- */}
+            <Route 
+              path="/admin"
+              element={
+                <AdminRoute user={user}>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              {/* These are the nested routes that will render inside AdminLayout's <Outlet> */}
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="users" element={<ManageUsersPage />} />
+              <Route path="skills" element={<ManageSkillsPage />} />
+              <Route path="swaps" element={<ManageSwapsPage />} />
+            </Route>
+            {/* --- END: ADMIN ROUTES --- */}
             
             {/* DEFAULT ROUTE */}
-            {/* If logged in, redirect to dashboard. Otherwise, redirect to login. */}
-            <Route 
-              path="/" 
-              element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
-            />
+            <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
           </Routes>
         </main>
       </div>

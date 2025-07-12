@@ -55,6 +55,28 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* --- START: NEW STYLES FOR RATING --- */
+.user-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.star-rating-display {
+  color: #7f8c8d; /* Color for empty stars */
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+.star-filled {
+  color: #f1c40f; /* Yellow for filled stars */
+}
+.rating-text {
+  font-size: 0.8rem;
+  color: #bdc3c7;
+}
+/* --- END: NEW STYLES FOR RATING --- */
+
+
 .request-button {
   padding: 0.6rem 1.2rem;
   background: linear-gradient(to right, #4dabf7, #3a7bd5);
@@ -65,6 +87,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .request-button:hover {

@@ -62,9 +62,21 @@ const getAllSwapsForAdmin = async (req, res) => {
 };
 
 
+
+
 /**
- * @desc    Reject (disapprove) a spammy skill description
- * @route   PATCH /api/v1/admin/skills/:id/reject
+ * @desc    Get all skills for admin management
+ * @route   GET /api/v1/admin/skills
+ * @access  Private (Admin)
+ */
+const getAllSkillsForAdmin = async (req, res) => {
+  const skills = await Skill.find({}).sort('name');
+  res.status(StatusCodes.OK).json({ skills, count: skills.length });
+};
+
+/**
+ * @desc    Toggle a skill's approval status
+ * @route   PATCH /api/v1/admin/skills/:id/toggle-approval
  * @access  Private (Admin)
  */
 const toggleSkillApproval = async (req, res) => {
@@ -82,11 +94,10 @@ const toggleSkillApproval = async (req, res) => {
     const message = skill.isApproved ? 'Skill has been approved' : 'Skill has been rejected';
     res.status(StatusCodes.OK).json({ msg: message, skill });
 };
-
-
 module.exports = {
   getAllUsersForAdmin,
   toggleBanUser,
   getAllSwapsForAdmin,
+  getAllSkillsForAdmin,
   toggleSkillApproval,
 };
