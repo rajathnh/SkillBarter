@@ -1,0 +1,16 @@
+[33mbd12a33[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: pull origin main: Fast-forward
+[33m123aac0[m HEAD@{1}: reset: moving to HEAD
+[33m123aac0[m HEAD@{2}: commit: Dashboard+Profile
+[33m685e719[m HEAD@{3}: reset: moving to HEAD
+[33m685e719[m HEAD@{4}: pull origin main: Fast-forward
+[33mbc6092a[m HEAD@{5}: reset: moving to HEAD
+[33mbc6092a[m HEAD@{6}: pull origin main: Fast-forward
+[33m569186a[m HEAD@{7}: commit: Admin
+[33m0bcda45[m HEAD@{8}: commit: backend
+[33m16f4dc1[m HEAD@{9}: pull origin main: Fast-forward
+[33m1bb0fb8[m HEAD@{10}: commit: auth+profile
+[33mfece87a[m HEAD@{11}: pull origin main: Fast-forward
+[33m4339cb3[m HEAD@{12}: commit: Initial setup
+[33mae7f16a[m HEAD@{13}: reset: moving to HEAD
+[33mae7f16a[m HEAD@{14}: commit: Readme
+[33m94219b9[m HEAD@{15}: commit (initial): Readme

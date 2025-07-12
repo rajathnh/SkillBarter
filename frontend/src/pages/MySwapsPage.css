@@ -1,0 +1,124 @@
+/* src/pages/MySwapsPage.css */
+
+.my-swaps-page {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem; /* Add horizontal padding for smaller screens */
+  color: #ecf0f1;
+}
+
+.my-swaps-page h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: white;
+  font-weight: 600;
+}
+
+.swaps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.swap-card {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+  justify-content: space-between;
+  align-items: center;
+  background: #2c3e50;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 6px solid #7f8c8d; /* Default border color */
+  transition: all 0.3s ease;
+  gap: 1rem;
+}
+
+/* Status-specific styles */
+.swap-card.status-pending { border-left-color: #f1c40f; }
+.swap-card.status-accepted { border-left-color: #2ecc71; }
+.swap-card.status-completed { border-left-color: #3498db; }
+.swap-card.status-rejected { border-left-color: #e74c3c; }
+.swap-card.status-cancelled { border-left-color: #95a5a6; }
+
+.swap-info {
+  flex-grow: 1;
+}
+
+.swap-user p {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.swap-user a {
+  font-weight: 600;
+  color: #3498db;
+  text-decoration: none;
+}
+.swap-user a:hover {
+  text-decoration: underline;
+}
+
+.swap-details p {
+  margin: 0.25rem 0;
+  color: #bdc3c7;
+}
+.swap-details p strong {
+  color: #ecf0f1;
+}
+
+.swap-status-section {
+  text-align: right;
+  min-width: 150px;
+  flex-shrink: 0; /* Prevents this section from shrinking too much */
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.status-badge.status-pending { background-color: #f1c40f; color: #333; }
+.status-badge.status-accepted { background-color: #2ecc71; color: white; }
+.status-badge.status-completed { background-color: #3498db; color: white; }
+.status-badge.status-rejected { background-color: #e74c3c; color: white; }
+.status-badge.status-cancelled { background-color: #95a5a6; color: white; }
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-buttons button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.btn-accept { background-color: #27ae60; }
+.btn-reject { background-color: #c0392b; }
+.btn-cancel { background-color: #7f8c8d; }
+.btn-complete { background-color: #2ecc71; }
+.btn-feedback { background-color: #3498db; }
+
+.no-swaps-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 3rem;
+  background-color: rgba(44, 62, 80, 0.7);
+  border-radius: 12px;
+}

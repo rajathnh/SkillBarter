@@ -3,27 +3,37 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axiosConfig';
 import UserCard from '../components/UserCard';
-import './DashboardPage.css'; // For dashboard-specific styles
+import './DashboardPage.css';
 
 function DashboardPage() {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Pagination and search state
+  // State for pagination and search functionality
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
+
+  // Get the current logged-in user's ID from localStorage to filter them out
+  const storedUser = JSON.parse(localStorage.getItem('skillSwapUser'));
+  const currentUserId = storedUser?.userId;
 
   useEffect(() => {
     const fetchProfiles = async () => {
       setLoading(true);
       setError('');
       try {
-        // Construct the query string for search and pagination
         const response = await api.get(`/users?page=${page}&search=${search}`);
-        setProfiles(response.data.profiles);
+        
+        // Filter out the current user's profile from the fetched list
+        const otherUserProfiles = response.data.profiles.filter(
+          profile => profile.user._id !== currentUserId
+        );
+        
+        setProfiles(otherUserProfiles);
         setTotalPages(response.data.numOfPages);
+
       } catch (err) {
         setError('Failed to fetch user profiles. Please try again later.');
         console.error(err);
@@ -32,23 +42,22 @@ function DashboardPage() {
     };
 
     fetchProfiles();
-  }, [page, search]); // Re-fetch whenever page or search term changes
+  }, [page, search, currentUserId]); // Dependency array ensures this re-runs if any of these change
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    setPage(1); // Reset to first page on new search
-    // The useEffect will trigger the fetch
-  }
+    setPage(1); // Reset to the first page for every new search
+    // The useEffect hook will automatically trigger the API call
+  };
 
   return (
     <div className="dashboard-page">
       <h1 className="dashboard-title">Find a Skill Swap</h1>
       
-      {/* Search Bar */}
       <form onSubmit={handleSearchSubmit} className="search-form">
         <input 
           type="text" 
-          placeholder="Search by name or skill..."
+          placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="search-input"
@@ -56,33 +65,36 @@ function DashboardPage() {
         <button type="submit" className="search-button">Search</button>
       </form>
 
-      {/* Main Content */}
+      {/* Render Loading or Error State */}
       {loading ? (
-        <div className="loading-spinner">Loading...</div> // Replace with a real spinner if you have time
+        <div className="loading-spinner" style={{color: 'white', textAlign: 'center', padding: '2rem'}}>Loading profiles...</div>
       ) : error ? (
-        <div className="error-message">{error}</div>
+        <div className="error-message" style={{color: 'red', textAlign: 'center', padding: '2rem'}}>{error}</div>
       ) : (
         <>
+          {/* Render the list of user cards */}
           <div className="profiles-list">
             {profiles.length > 0 ? (
               profiles.map(profile => (
                 <UserCard key={profile._id} profile={profile} />
               ))
             ) : (
-              <p>No profiles found.</p>
+              <p style={{color: 'white', textAlign: 'center', padding: '2rem'}}>No other user profiles found.</p>
             )}
           </div>
 
-          {/* Pagination Controls */}
-          <div className="pagination">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-              « Prev
-            </button>
-            <span>Page {page} of {totalPages}</span>
-            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-              Next »
-            </button>
-          </div>
+          {/* Render Pagination Controls only if there's more than one page */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+                « Prev
+              </button>
+              <span>Page {page} of {totalPages}</span>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                Next »
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
