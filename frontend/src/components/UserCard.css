@@ -7,13 +7,18 @@
 }
 
 .user-card {
-  background: rgba(40, 56, 71, 0.6);
+  background: rgba(25, 36, 45, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  border-radius: 18px;
+  padding: 3.5rem 2.5rem;
+  margin-bottom: 2.5rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+  width: 98vw;
+  max-width: 1200px;
+  min-width: 350px;
+  margin-left: auto;
+  margin-right: 200px;
 }
 
 .user-card:hover {
@@ -44,14 +49,14 @@
 
 .user-name {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: #ffffff;
   font-weight: 600;
 }
 
 .user-location {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -64,7 +69,7 @@
 }
 .star-rating-display {
   color: #7f8c8d; /* Color for empty stars */
-  font-size: 1rem;
+  font-size: 1.2rem;
   letter-spacing: 1px;
 }
 .star-filled {
@@ -83,7 +88,7 @@
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -106,7 +111,7 @@
 .skills-list h4 {
   margin-top: 0;
   margin-bottom: 0.75rem;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
 }
@@ -122,7 +127,7 @@
   color: #ade8f4;
   padding: 0.3rem 0.7rem;
   border-radius: 15px;
-  font-size: 0.85rem;
+  font-size: 1.2rem;
 }
 
 .tag-empty {
