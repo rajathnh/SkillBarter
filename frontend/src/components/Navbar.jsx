@@ -2,10 +2,6 @@ import React from 'react';
 import NavbarPublic from './NavbarPublic';
 import NavbarPrivate from './NavbarPrivate';
 
-import React from 'react';
-import NavbarPrivate from './NavbarPrivate';
-import NavbarPublic from './NavbarPublic';
-
 // This is the main Navbar component used by App.jsx.
 // Its only job is to decide which version of the navbar to show.
 function Navbar({ user, onLogout }) {
