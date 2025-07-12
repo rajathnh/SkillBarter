@@ -1,35 +1,38 @@
+// src/pages/LoginPage.jsx
+
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../api/axiosConfig'; // Assuming you have this file from earlier
 import './LoginPage.css';
 
-function LoginPage() {
+// The component receives an 'onLogin' function as a prop from App.jsx
+function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert('Login successful!');
-        // You can redirect or store token here
-      } else {
-        setError(data.message || 'Login failed');
-      }
+      const { data } = await api.post('/auth/login', { email, password });
+      
+      // 1. Save user object to localStorage for persistence across page reloads
+      localStorage.setItem('skillSwapUser', JSON.stringify(data.user));
+
+      // 2. Call the onLogin function passed from App.jsx to update the application's state
+      onLogin(data.user);
+
+      // 3. Navigate to the dashboard page
+      navigate('/dashboard');
+
     } catch (err) {
-      setError('Network error');
+      // Axios puts API errors in err.response.data
+      setError(err.response?.data?.msg || 'Login failed. Please check your credentials.');
     }
     setLoading(false);
   };
@@ -52,12 +55,13 @@ function LoginPage() {
           <div className="input-group">
             <input
               type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder=" "
             />
-            <label>Email Address</label>
+            <label htmlFor="email">Email Address</label>
             <span className="input-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -68,12 +72,13 @@ function LoginPage() {
           <div className="input-group">
             <input
               type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder=" "
             />
-            <label>Password</label>
+            <label htmlFor="password">Password</label>
             <span className="input-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -82,7 +87,9 @@ function LoginPage() {
             </span>
           </div>
           {error && (
-            <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{error}</div>
+            <div style={{ color: '#ff4d4d', background: '#ff4d4d20', padding: '10px', borderRadius: '8px', marginBottom: '15px', textAlign: 'center', border: '1px solid #ff4d4d' }}>
+              {error}
+            </div>
           )}
           <div className="options-row">
             <label className="remember-me">
@@ -103,7 +110,7 @@ function LoginPage() {
             </svg>
           </button>
           <div className="signup-link">
-            Don't have an account? <a href="#">Sign up</a>
+            Don't have an account? <Link to="/signup">Sign up</Link>
           </div>
         </form>
         
@@ -112,7 +119,7 @@ function LoginPage() {
         </div>
         
         <div className="social-login">
-          <button className="social-button">
+          <button className="social-button" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -121,7 +128,7 @@ function LoginPage() {
             </svg>
             Google
           </button>
-          <button className="social-button">
+          <button className="social-button" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
             </svg>
